@@ -1,0 +1,135 @@
+自定义图源导入说明
+====================
+
+本插件支持「默认初始搜图源 + 自定义导入源」。默认已带百度图片、必应图片、360 图片（内置）
+与搜狗图片（默认启用）；另外预置了 Openverse / 维基共享资源 / Pixabay / Unsplash / Pexels
+模板，可在「图源管理」里一键添加。如果你有自己的图源（带 Key 的公开 API、公司/自建图库、
+支持 JSON 的第三方接口），可以按本说明导入为自定义源。
+
+------------------------------------------------------------
+一、在哪里管理
+------------------------------------------------------------
+打开插件 → 「AI 配置」页 → 「图源管理」卡片，可：
+  · 查看全部图源（内置不可删；自定义可启用/禁用、编辑、删除）
+  · 把任意一个源设为「默认供应商」（生成向导搜图时优先使用）
+  · 一键添加预置模板
+  · 粘贴 JSON 导入 / 从 .json 文件导入
+  · 导出当前自定义源为 JSON（便于分享或备份）
+
+------------------------------------------------------------
+二、自定义源的定义格式（JSON）
+------------------------------------------------------------
+一个自定义源就是一个 JSON 对象，字段如下：
+
+{
+  "id":         必填，唯一标识（字母/数字/下划线/中划线，最长 64 位，不能与内置源重名）
+  "name":       必填，显示名称
+  "endpoint":   必填，接口地址模板，支持占位符（见下）
+  "headers":    可选，请求头对象（值里可用 {key} 原样替换，用于 Authorization 等）
+  "cookies":    可选，Cookie 对象（键值对自动拼成 Cookie 头）
+  "key":        可选，API Key（自动加密保存在本机，界面显示为掩码）
+  "resultsPath": 可选，结果数组在返回 JSON 中的位置（点分路径，留空 = 整个 JSON 就是数组）
+  "fields":     可选，字段映射（把接口返回的字段名映射到插件的统一字段，见下）
+  "enabled":    可选，是否启用（默认 true）
+  "allowPrivate": 可选，是否允许访问内网/本机地址（默认 false；指向局域网/本机图库时才设 true）
+}
+
+endpoint 占位符（自动 URL 编码）：
+  {query}  搜索关键词
+  {count}  每页数量
+  {page}   页码（从 1 开始）
+  {start}  偏移量 = (page-1) * count（适合 start 型接口）
+  {key}    上面填写的 API Key
+
+fields 支持的映射键（值 = 返回 JSON 里的字段路径，支持 a.b 与 a[0].b 下标）：
+  imageUrl     原图地址（必填，其余可省略）
+  thumbnailUrl 缩略图地址
+  width / height  图片宽高
+  title        标题
+  sourceUrl    图片来源页面地址
+  author       作者
+  license      授权信息
+  mimeType     图片格式
+
+------------------------------------------------------------
+三、三种添加方式
+------------------------------------------------------------
+1) 表单添加：图源管理 → 「＋ 添加自定义源」→ 填名称/ID/接口地址/字段映射 → 「测试连接」
+   通过后「保存」。
+2) 粘贴 JSON：图源管理 → 「导入 JSON」→ 把 JSON 粘贴到文本框 → 确定。可一次粘贴多个
+   （数组 [ {…}, {…} ]）或单个对象。
+3) 文件导入：图源管理 → 「从文件导入」→ 选择一个 .json 文件（内容同上）。
+
+重复 ID 会被跳过并提示；无效定义会逐条列出原因，不影响其他源导入。
+
+------------------------------------------------------------
+四、示例 1：Pixabay（带 Key 的公开 API）
+------------------------------------------------------------
+先在 https://pixabay.com/api/docs/ 免费申请 API Key，然后导入：
+
+{
+  "id": "my_pixabay",
+  "name": "Pixabay（我的 Key）",
+  "endpoint": "https://pixabay.com/api/?key={key}&q={query}&per_page={count}&page={page}",
+  "key": "在这里粘贴你的 Pixabay API Key",
+  "resultsPath": "hits",
+  "fields": {
+    "imageUrl": "webformatURL",
+    "thumbnailUrl": "previewURL",
+    "width": "imageWidth",
+    "height": "imageHeight",
+    "title": "tags",
+    "sourceUrl": "pageURL",
+    "author": "user"
+  },
+  "enabled": true
+}
+
+------------------------------------------------------------
+五、示例 2：自建 / 第三方 JSON 接口
+------------------------------------------------------------
+假设你的接口 GET https://gallery.example.com/api/search?q=xxx 返回：
+
+{
+  "images": [
+    {
+      "originUrl": "https://cdn.example.com/a.jpg",
+      "thumbUrl":  "https://cdn.example.com/a_thumb.jpg",
+      "width": 1920, "height": 1080,
+      "title": "示例图",
+      "pageUrl": "https://gallery.example.com/detail/1"
+    }
+  ]
+}
+
+导入下面这个定义即可（字段路径一一对应；有鉴权时用 headers 传 {key}）：
+
+{
+  "id": "my_gallery",
+  "name": "我的图库服务",
+  "endpoint": "https://gallery.example.com/api/search?q={query}&page={page}&size={count}",
+  "headers": { "Authorization": "Bearer {key}" },
+  "key": "your-token",
+  "resultsPath": "images",
+  "fields": {
+    "imageUrl": "originUrl",
+    "thumbnailUrl": "thumbUrl",
+    "width": "width",
+    "height": "height",
+    "title": "title",
+    "sourceUrl": "pageUrl"
+  },
+  "enabled": true
+}
+
+如果你的图库跑在局域网/本机（如 http://192.168.1.10:8000/search?q={query}），
+需要额外加一行 "allowPrivate": true 才能通过安全校验（默认禁止内网地址）。
+
+------------------------------------------------------------
+六、常见问题
+------------------------------------------------------------
+· 搜图时提示「未知图源」：该源被禁用或已删除，请回「图源管理」检查。
+· 某源搜不到结果/提示错误：先在「测试连接」验证；多数是接口字段名不对，对照
+  返回值调整 fields；外网源（Openverse/维基等）在国内网络可能不可达。
+· Key 只在图源管理里填一次，之后界面显示掩码；导出 JSON 不会带出 Key。
+· 下载图片仍走统一安全通道（SSRF 防护 / 格式白名单 / 大小限制），自定义源也不例外。

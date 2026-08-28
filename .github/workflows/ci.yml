@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            addin/package-lock.json
+
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+
+      - name: Install add-in dependencies
+        run: npm ci
+        working-directory: addin
+
+      - name: Run server tests
+        run: npm test
+        working-directory: server
+
+      - name: Run file-level golden paths
+        run: npm run e2e:file
+        working-directory: server
+
+      - name: Run add-in tests
+        run: node --test "test/*.test.mjs"
+        working-directory: addin
+
+      - name: Type-check add-in
+        run: node node_modules/typescript/bin/tsc --noEmit
+        working-directory: addin
+
+      - name: Build add-in
+        run: npm run build
+        working-directory: addin

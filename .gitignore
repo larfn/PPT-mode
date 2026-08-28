@@ -1,0 +1,16 @@
+node_modules/
+addin/dist/
+dist-exe/
+server/data/
+*.log
+.DS_Store
+.superpowers/
+.planning/
+.playwright-cli/
+output/
+.dsh/
+.dsh-vision-toolkit/
+_tmp_*.bat
+.env
+.env.*
+!.env.example

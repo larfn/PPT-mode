@@ -1,0 +1,15 @@
+{
+  "name": "ppt-ai-addin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PowerPoint 模板与套版助手",
+  "license": "MIT",
+  "scripts": {
+    "start:server": "node server/src/index.js",
+    "dev:server": "node --watch server/src/index.js",
+    "test:server": "node --test \"server/test/*.test.js\"",
+    "test:installer": "node scripts/test-installer-bat.js",
+    "release": "node scripts/release.js",
+    "verify-install": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-install.ps1"
+  }
+}

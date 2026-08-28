@@ -1,0 +1,30 @@
+{
+  "version": "2026.08.29.02",
+  "apiVersion": "1",
+  "builtAt": "2026-08-28T18:12:09.880Z",
+  "name": "ppt-ai-addin",
+  "artifacts": {
+    "exe": {
+      "path": "dist-exe/ppt-ai-addin.exe",
+      "size": 146499446,
+      "sha256": "0d902ce50585413644f8331c0c602bdfa3bc900c5b57856f287f026e4e01e50d"
+    },
+    "frontend": {
+      "path": "addin/dist",
+      "mainJs": "index-CMHnzguL.js",
+      "mainJsSize": 319196
+    },
+    "manifest": {
+      "path": "manifest.xml",
+      "sha256": "a27f9f5c220d5490229fb7fb188da7f8b42f5e1a41edf4f3025362bc25745427"
+    }
+  },
+  "tests": {
+    "e2e": "passed",
+    "server": "skipped",
+    "addin": "skipped",
+    "tsc": "passed",
+    "addinBuild": "passed",
+    "exeBuild": "passed"
+  }
+}

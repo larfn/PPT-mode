@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+           xsi:type="TaskPaneApp">
+  <Id>2a7f4c3e-8b1d-4a90-9e6f-3b5a1c9d8e2f</Id>
+  <Version>2026.08.24.02</Version>
+  <ProviderName>ppt-ai-addin</ProviderName>
+  <DefaultLocale>zh-CN</DefaultLocale>
+  <DisplayName DefaultValue="模板助手"/>
+  <Description DefaultValue="保存模板、套版生成与内容填充"/>
+  <IconUrl DefaultValue="http://localhost:3788/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="http://localhost:3788/assets/icon-80.png"/>
+  <SupportUrl DefaultValue="http://localhost:3788/"/>
+  <AppDomains><AppDomain>localhost</AppDomain></AppDomains>
+  <Hosts><Host Name="Presentation"/></Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="http://localhost:3788/index.html"/>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides/1.0" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Presentation">
+        <DesktopFormFactor>
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
+          </GetStarted>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="PPT.AI.Group">
+                <Label resid="Group.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16"/>
+                  <bt:Image size="32" resid="Icon.32"/>
+                  <bt:Image size="80" resid="Icon.80"/>
+                </Icon>
+                <Control xsi:type="Button" id="PPT.AI.OpenTaskpane">
+                  <Label resid="Taskpane.Button.Label"/>
+                  <Supertip>
+                    <Title resid="Taskpane.Button.Label"/>
+                    <Description resid="Taskpane.Button.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16"/>
+                    <bt:Image size="32" resid="Icon.32"/>
+                    <bt:Image size="80" resid="Icon.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>PPT.AI.Taskpane</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="http://localhost:3788/assets/icon-16.png"/>
+        <bt:Image id="Icon.32" DefaultValue="http://localhost:3788/assets/icon-32.png"/>
+        <bt:Image id="Icon.80" DefaultValue="http://localhost:3788/assets/icon-80.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Taskpane.Url" DefaultValue="http://localhost:3788/index.html"/>
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="http://localhost:3788/"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GetStarted.Title" DefaultValue="模板助手"/>
+        <bt:String id="Group.Label" DefaultValue="模板助手"/>
+        <bt:String id="Taskpane.Button.Label" DefaultValue="模板助手"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="GetStarted.Description" DefaultValue="保存模板、套版生成与内容填充"/>
+        <bt:String id="Taskpane.Button.Tooltip" DefaultValue="打开模板助手"/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

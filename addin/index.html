@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>模板助手</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <button data-route="#library">模板库</button>
+    <button data-route="#wizard">生成向导</button>
+    <button data-route="#save">保存模板</button>
+    <button data-route="#decks">套版</button>
+    <button data-route="#settings">AI 配置</button>
+  </nav>
+  <main id="page"></main>
+  <script type="module" src="/src/taskpane.ts"></script>
+</body>
+</html>

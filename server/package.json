@@ -1,0 +1,31 @@
+{
+  "name": "ppt-ai-addin-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/index.js",
+  "bin": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "build:exe": "pkg . --targets node24-win-x64 --output ../dist-exe/ppt-ai-addin.exe",
+    "test": "node --test",
+    "e2e": "node e2e/golden-path.js",
+    "e2e:file": "node e2e/golden-path.js --no-com"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "jszip": "^3.10.1",
+    "mathml2omml": "^0.5.0",
+    "pptxgenjs": "^3.12.0",
+    "tex-to-mml": "^0.2.0"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.22.0"
+  },
+  "pkg": {
+    "assets": [
+      "mcp/context.ps1",
+      "mcp/insert.ps1"
+    ]
+  }
+}
