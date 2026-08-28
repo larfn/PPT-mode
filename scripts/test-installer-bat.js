@@ -18,9 +18,13 @@ try {
   const cr = bytes.filter((b) => b === 13).length;
   const lf = bytes.filter((b) => b === 10).length;
   assert.equal(cr, lf, '安装.bat must use CRLF line endings for cmd.exe stability');
-  assert.match(sourceText, /Stop-Process -Force/, '安装.bat must force-stop stale service processes before copying files');
-  assert.match(sourceText, /Get-NetTCPConnection/, '安装.bat must also stop service process by the recorded/listening port');
-  assert.match(sourceText, /旧服务仍在运行/, '安装.bat must fail clearly if the old service cannot be stopped');
+  assert.match(sourceText, /taskkill \/F \/T \/IM ppt-ai-addin\.exe/, '安装.bat must stop the stale service process tree before copying files');
+  assert.match(sourceText, /scripts\\stop-service\.ps1/, '安装.bat must use the robust PowerShell stop helper before copying files');
+
+  const stopScript = fs.readFileSync(path.join(root, 'scripts', 'stop-service.ps1'), 'utf8');
+  assert.match(stopScript, /Stop-Process -Id/, 'stop-service.ps1 must force-stop stale service processes');
+  assert.match(stopScript, /Get-NetTCPConnection/, 'stop-service.ps1 must also stop service process by the recorded/listening port');
+  assert.match(stopScript, /Stale service is still running/, 'stop-service.ps1 must fail clearly if the old service cannot be stopped');
 
   const result = spawnSync(
     'cmd.exe',

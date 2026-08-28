@@ -1,6 +1,6 @@
 # 更新日志
 
-## 2026.08.29.01
+## 2026.08.29.04
 
 本版本将产品对外名称统一为“模板助手”，完成发布前的代码、安装、文档和图标收口。
 
@@ -21,8 +21,8 @@
 ### 发布产物
 
 - Windows 可执行文件：`dist-exe/ppt-ai-addin.exe`
-- 文件大小：`146499550` bytes
-- SHA256：`4346aee4a728e2860a29e2ee0649871645ab524a8776ffc2eb0c54e33e7b87d7`
+- 文件大小：`146499478` bytes
+- SHA256：`b3cdcef4bc6022aa8729ece3dec384af46b861080e2f5a3289045aae8bf4d153`
 - 加载项目录：`addin/dist`
 - PowerPoint 清单：`manifest.xml`
 

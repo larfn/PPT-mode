@@ -88,8 +88,8 @@ set "RELEASE_PATH=%INSTALL_DIR%\release.json"
 
 rem ---------- 2. 停止旧服务并复制文件 ----------
 echo [1/6] 停止旧服务并复制文件到 %INSTALL_DIR% ...
-taskkill /F /IM ppt-ai-addin.exe >nul 2>nul
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $rt=Join-Path $env:APPDATA 'ppt-ai-addin\runtime.json'; $port=$null; if (Test-Path -LiteralPath $rt) { $port=(Get-Content -Raw -LiteralPath $rt | ConvertFrom-Json).port }; $deadline=(Get-Date).AddSeconds(15); do { $targets=@(); $targets += Get-Process -Name 'ppt-ai-addin'; if ($port) { $targets += Get-NetTCPConnection -LocalPort $port -State Listen | ForEach-Object { Get-Process -Id $_.OwningProcess } }; $targets | Sort-Object Id -Unique | Stop-Process -Force; Start-Sleep -Milliseconds 500; $left=@(Get-Process -Name 'ppt-ai-addin'); if ($port) { $left += Get-NetTCPConnection -LocalPort $port -State Listen | ForEach-Object { Get-Process -Id $_.OwningProcess } } } while ($left.Count -gt 0 -and (Get-Date) -lt $deadline); if ($left.Count -gt 0) { Write-Host '[错误] 旧服务仍在运行，无法替换文件。请关闭 PowerPoint 或重启电脑后重试。'; exit 1 }"
+taskkill /F /T /IM ppt-ai-addin.exe >nul 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -File "scripts\stop-service.ps1" -ProcessName "ppt-ai-addin" -RuntimeFile "%APPDATA%\ppt-ai-addin\runtime.json" -TimeoutSeconds 15
 if errorlevel 1 goto :fail
 
 if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
